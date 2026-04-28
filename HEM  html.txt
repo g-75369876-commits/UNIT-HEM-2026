@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Unit HEM | Sistem Pengurusan Sekolah</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-blue: #e3f2fd;
+            --dark-blue: #1565c0;
+            --soft-green: #e8f5e9;
+            --dark-green: #2e7d32;
+            --white: #ffffff;
+            --text-main: #333333;
+            --sidebar-width: 260px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #f4f7f6;
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* LAYOUT */
+        .wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--white);
+            border-right: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--primary-blue);
+        }
+
+        .logo-placeholder {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-blue);
+            border-radius: 12px;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-blue);
+            font-weight: bold;
+        }
+
+        .nav-menu {
+            padding: 20px 0;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            padding: 12px 25px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 0.9rem;
+            color: #666;
+            gap: 10px;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: var(--primary-blue);
+            color: var(--dark-blue);
+            border-left: 4px solid var(--dark-blue);
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex-grow: 1;
+            padding: 30px;
+        }
+
+        /* HEADER */
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: var(--white);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* DASHBOARD GRID */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            border-bottom: 5px solid var(--dark-blue);
+            text-align: center;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card i {
+            margin-bottom: 15px;
+            color: var(--dark-blue);
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        /* PAGE STRUCTURE (HIDDEN BY DEFAULT) */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .btn-back {
+            padding: 10px 20px;
+            background: #eee;
+            border-radius: 8px;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* JAWATANKUASA CONTENT STYLING */
+        .content-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .info-card {
+            background: var(--white);
+            padding: 25px;
+            border-radius: 15px;
+            height: 100%;
+        }
+
+        .action-box {
+            background: var(--soft-green);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-upload { background: var(--dark-blue); color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; display: flex; gap: 5px; }
+        .btn-download { background: var(--dark-green); color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; display: flex; gap: 5px; }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            background: #fff3e0;
+            color: #ef6c00;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-placeholder">HEM</div>
+            <h4 style="font-size: 0.8rem; color: #666;">SK BESTARI MALAYSIA</h4>
+        </div>
+        <div class="nav-menu">
+            <div class="nav-item active" onclick="showPage('main-dashboard')"><i data-lucide="layout-dashboard"></i> Dashboard Utama</div>
+            <div class="nav-item" onclick="showPage('page-induk')"><i data-lucide="users"></i> Jawatankuasa Induk</div>
+            <div class="nav-item" onclick="showPage('page-disiplin')"><i data-lucide="shield-alert"></i> Disiplin & SSDM</div>
+            <div class="nav-item" onclick="showPage('page-spbt')"><i data-lucide="book-open"></i> Unit SPBT</div>
+            <div class="nav-item" onclick="showPage('page-rmt')"><i data-lucide="utensils"></i> Unit RMT</div>
+            <div class="nav-item" onclick="showPage('page-apdm')"><i data-lucide="database"></i> Data APDM</div>
+            <div class="nav-item" onclick="showPage('page-3k')"><i data-lucide="heart-pulse"></i> Unit 3K</div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header-top">
+            <div>
+                <h2 id="current-title">Dashboard Utama HEM</h2>
+                <p id="current-date" style="font-size: 0.9rem; color: #888;"></p>
+            </div>
+            <div class="user-profile">
+                <div style="text-align: right;">
+                    <p style="font-weight: 600;">Cikgu Engku</p>
+                    <p style="font-size: 0.75rem; color: #777;">Penyelaras HEM</p>
+                </div>
+                <div style="width: 45px; height: 45px; background: #ddd; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <i data-lucide="user"></i>
+                </div>
+            </div>
+        </div>
+
+        <div id="main-dashboard" class="page active">
+            <div class="dashboard-grid">
+                <div class="card" onclick="showPage('page-induk')">
+                    <i data-lucide="users" size="40"></i>
+                    <h3>J/K Induk HEM</h3>
+                    <p>Struktur Organisasi & Misi</p>
+                </div>
+                <div class="card" onclick="showPage('page-disiplin')" style="border-bottom-color: #d32f2f;">
+                    <i data-lucide="shield-alert" size="40"></i>
+                    <h3>Disiplin & SSDM</h3>
+                    <p>Rekod Kes & Borang Disiplin</p>
+                </div>
+                <div class="card" onclick="showPage('page-spbt')" style="border-bottom-color: #fbc02d;">
+                    <i data-lucide="book-open" size="40"></i>
+                    <h3>Unit SPBT</h3>
+                    <p>Pengurusan Buku Teks</p>
+                </div>
+                <div class="card" onclick="showPage('page-rmt')" style="border-bottom-color: #388e3c;">
+                    <i data-lucide="utensils" size="40"></i>
+                    <h3>Unit RMT</h3>
+                    <p>Jadual Makan & Kehadiran</p>
+                </div>
+                <div class="card" onclick="showPage('page-apdm')" style="border-bottom-color: #7b1fa2;">
+                    <i data-lucide="database" size="40"></i>
+                    <h3>Data APDM</h3>
+                    <p>Maklumat Murid & Kehadiran</p>
+                </div>
+                <div class="card" onclick="showPage('page-3k')" style="border-bottom-color: #0288d1;">
+                    <i data-lucide="heart-pulse" size="40"></i>
+                    <h3>Unit 3K</h3>
+                    <p>Keselamatan & Kesihatan</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-induk" class="page">
+            <div class="page-header">
+                <button class="btn-back" onclick="showPage('main-dashboard')"><i data-lucide="arrow-left"></i> Kembali</button>
+                <h2>Jawatankuasa Induk HEM</h2>
+            </div>
+            <div class="content-section">
+                <div class="info-card">
+                    <h3>Struktur Organisasi</h3>
+                    <p style="margin-top: 15px;">1. Pengerusi: Guru Besar</p>
+                    <p>2. Timbalan Pengerusi: PK HEM (Cikgu Engku)</p>
+                    <p>3. Setiausaha: Cikgu Sarah</p>
+                    <hr style="margin: 15px 0;">
+                    <h4>Peranan Utama:</h4>
+                    <ul>
+                        <li>Merancang program pembangunan sahsiah.</li>
+                        <li>Mengurus kebajikan murid.</li>
+                    </ul>
+                </div>
+                <div class="info-card">
+                    <h3>Pusat Dokumen</h3>
+                    <div class="action-box">
+                        <span>Carta Organisasi 2026</span>
+                        <button class="btn-download"><i data-lucide="download"></i> Muat Turun</button>
+                    </div>
+                    <div class="action-box">
+                        <span>Takwim Unit HEM</span>
+                        <button class="btn-upload"><i data-lucide="upload"></i> Kemaskini</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-disiplin" class="page">
+            <div class="page-header">
+                <button class="btn-back" onclick="showPage('main-dashboard')"><i data-lucide="arrow-left"></i> Kembali</button>
+                <h2>Unit Disiplin & SSDM</h2>
+            </div>
+            <div class="content-section">
+                <div class="info-card">
+                    <h3>Ringkasan SSDM</h3>
+                    <div style="margin-top: 20px; display: flex; justify-content: space-around;">
+                        <div style="text-align:center">
+                            <h2 style="color: var(--dark-green);">85</h2>
+                            <p>Amalan Baik</p>
+                        </div>
+                        <div style="text-align:center">
+                            <h2 style="color: #d32f2f;">3</h2>
+                            <p>Kes Ringan</p>
+                        </div>
+                    </div>
+                    <br>
+                    <button class="btn-upload" style="width: 100%; justify-content: center;"><i data-lucide="external-link"></i> Buka Portal SSDM</button>
+                </div>
+                <div class="info-card">
+                    <h3>Borang & Laporan</h3>
+                    <div class="action-box">
+                        <span>Borang Aduan Disiplin</span>
+                        <button class="btn-download"><i data-lucide="download"></i> Ambil</button>
+                    </div>
+                    <div class="action-box">
+                        <span>Laporan Mingguan</span>
+                        <button class="btn-upload"><i data-lucide="upload"></i> Upload</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-spbt" class="page">
+             <div class="page-header">
+                <button class="btn-back" onclick="showPage('main-dashboard')"><i data-lucide="arrow-left"></i> Kembali</button>
+                <h2>Pengurusan Buku Teks (SPBT)</h2>
+            </div>
+            <div class="info-card">
+                <p>Kandungan untuk SPBT di sini...</p>
+                <div class="action-box">
+                    <span>Data Stok Buku Teks</span>
+                    <button class="btn-upload"><i data-lucide="upload"></i> Kemaskini Data</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Initialize Icons
+    lucide.createIcons();
+
+    // Set Current Date
+    const d = new Date();
+    document.getElementById('current-date').innerText = d.toLocaleDateString('ms-MY', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+    // Page Switching Logic
+    function showPage(pageId) {
+        // Hide all pages
+        const pages = document.querySelectorAll('.page');
+        pages.forEach(p => p.classList.remove('active'));
+
+        // Remove active class from nav
+        const navs = document.querySelectorAll('.nav-item');
+        navs.forEach(n => n.classList.remove('active'));
+
+        // Show selected page
+        document.getElementById(pageId).classList.add('active');
+
+        // Update Title in Header
+        const titles = {
+            'main-dashboard': 'Dashboard Utama HEM',
+            'page-induk': 'Jawatankuasa Induk HEM',
+            'page-disiplin': 'Unit Disiplin & SSDM',
+            'page-spbt': 'Unit SPBT',
+            'page-rmt': 'Unit RMT',
+            'page-apdm': 'Data Maklumat Murid (APDM)',
+            'page-3k': 'Unit 3K (Keselamatan, Kesihatan, Keceriaan)'
+        };
+        document.getElementById('current-title').innerText = titles[pageId];
+    }
+</script>
+
+</body>
+</html>
